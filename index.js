@@ -243,4 +243,3 @@ loadImages(imageSources, function(loadedImages) {
     // Start animation
     animate();
 });
-
