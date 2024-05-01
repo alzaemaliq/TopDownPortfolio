@@ -225,19 +225,21 @@ loadImages(imageSources, function(loadedImages) {
     }
 
     window.addEventListener('keydown', (e) => {
-        if (['w', 'a', 's', 'd'].includes(e.key) && !keysPressed.includes(e.key)) {
-            keysPressed.push(e.key);
+        const key = e.key.toLowerCase();  // Convert key input to lowercase
+        if (['w', 'a', 's', 'd'].includes(key) && !keysPressed.includes(key)) {
+            keysPressed.push(key);
             updateMovement();
         }
     });
-
+    
     window.addEventListener('keyup', (e) => {
-        if (['w', 'a', 's', 'd'].includes(e.key)) {
-            keysPressed = keysPressed.filter(key => key !== e.key);
+        const key = e.key.toLowerCase();  // Convert key input to lowercase
+        if (['w', 'a', 's', 'd'].includes(key)) {
+            keysPressed = keysPressed.filter(k => k !== key);
             updateMovement();
         }
     });
-
+    
     // Start animation
     animate();
 });
