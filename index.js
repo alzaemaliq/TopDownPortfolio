@@ -36,7 +36,9 @@ const imageSources = [
     './img/Walk.png',
     './img/playerUp.png',
     './img/playerLeft.png',
-    './img/playerRight.png'
+    './img/playerRight.png',
+    './img/blackSmith.png',
+    './img/houseOwner.png'
 ];
 
 function loadImages(imageSources, callback) {
@@ -64,6 +66,8 @@ loadImages(imageSources, function(loadedImages) {
     const playerImageUp = loadedImages['./img/playerUp.png'];
     const playerImageLeft = loadedImages['./img/playerLeft.png'];
     const playerImageRight = loadedImages['./img/playerRight.png'];
+    const blackSmithImage = loadedImages['./img/blackSmith.png'];
+    const houseOwnerImage = loadedImages['./img/houseOwner.png'];
 
     let playerY = 330;
 
@@ -93,22 +97,28 @@ loadImages(imageSources, function(loadedImages) {
     };
 
     class Sprite {
-        constructor({ position, image, width = image.width, height = image.height }) {
+        constructor({ position, image, width = image.width, height = image.height, srcX = 0, srcY = 0, srcWidth = image.width, srcHeight = image.height }) {
             this.position = position;
             this.image = image;
             this.width = width;
             this.height = height;
+            this.srcX = srcX;
+            this.srcY = srcY;
+            this.srcWidth = srcWidth;  // Width of the crop
+            this.srcHeight = srcHeight;  // Height of the crop
         }
-
+    
         draw() {
-            c.drawImage(this.image, this.position.x, this.position.y, this.width, this.height);
+            c.drawImage(this.image, this.srcX, this.srcY, this.srcWidth, this.srcHeight, this.position.x, this.position.y, this.width, this.height);
         }
-    }
+    }    
 
     let initialForegroundX = 0;
     let initialForegroundY = 0;
     let additionalForegroundWidth = -1120;
     let additionalForegroundHeight = -640;
+    let blackSmithInitialX = 673; // Your chosen offset from the background's starting x-position
+    let blackSmithInitialY = 600; // Your chosen offset from the background's starting y-position
 
     const background = new Sprite({
         position: {
@@ -125,8 +135,25 @@ loadImages(imageSources, function(loadedImages) {
         },
         image: foregroundObjects,
         width: foregroundObjects.width + additionalForegroundWidth,
-        height: foregroundObjects.height + additionalForegroundHeight
+        height: foregroundObjects.height + additionalForegroundHeight,
+        srcWidth: foregroundObjects.width,  // Use full image width
+        srcHeight: foregroundObjects.height // Use full image height
     });
+    
+
+    const blackSmith = new Sprite({
+        position: {
+            x: background.position.x + blackSmithInitialX,
+            y: background.position.y + blackSmithInitialY
+        },
+        image: blackSmithImage,
+        srcX: 0,   // Starting X position on the sprite sheet
+        srcY: 0,   // Starting Y position on the sprite sheet
+        srcWidth: 48, // Width to crop
+        srcHeight: 72, // Height to crop
+        width: 48, // Displayed width
+        height: 72 // Displayed height
+    });     
 
     const keys = {
         w: { pressed: false },
@@ -211,8 +238,12 @@ loadImages(imageSources, function(loadedImages) {
 
         foreground.position.x = background.position.x + initialForegroundX;
         foreground.position.y = background.position.y + initialForegroundY;
+        blackSmith.position.x = background.position.x + blackSmithInitialX;
+        blackSmith.position.y = background.position.y + blackSmithInitialY;
+
 
         background.draw();
+        blackSmith.draw();
         boundaries.forEach(boundary => boundary.draw({x: background.position.x, y: background.position.y}));
 
         const playerImage = player.currentDirection === 'up' ? playerImageUp :
