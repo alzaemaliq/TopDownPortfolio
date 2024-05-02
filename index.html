@@ -12,16 +12,37 @@
             justify-content: center;
             align-items: center;
             background-color: black;
+            overflow: hidden; /* Prevents scrollbars */
         }
         canvas {
-            width: 1000px;
-            height: 500px;
-            border-radius: 25px; /* Adjust the px value to increase or decrease the curvature */
+            width: 1024px; /* Consistent with your canvas initialization in JavaScript */
+            height: 576px; /* Consistent with your canvas initialization in JavaScript */
+            border-radius: 25px;
+            z-index: 1; /* Ensures canvas stays behind dialogue if overlap occurs */
+        }
+        #dialogue-box {
+            display: none; /* Initially hidden */
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: white;
+            border: 1px solid black;
+            padding: 10px;
+            width: 300px;
+            text-align: center;
+            border-radius: 15px;
+            box-shadow: 0px 0px 10px 3px rgba(0,0,0,0.5);
+            z-index: 10; /* Ensures dialogue box is always on top */
         }
     </style>
 </head>
 <body>
     <canvas></canvas>
+    <!-- Dialogue box container -->
+    <div id="dialogue-box">
+        <p id="dialogue-text">Welcome to my portfolio!</p>
+    </div>
     <script src="collisions.js"></script>
     <script src="index.js"></script>
 </body>
