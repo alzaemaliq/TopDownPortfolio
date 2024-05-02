@@ -106,15 +106,24 @@ loadImages(imageSources, function(loadedImages) {
             this.height = height;
             this.srcX = srcX;
             this.srcY = srcY;
-            this.srcWidth = srcWidth;  // Width of the crop
-            this.srcHeight = srcHeight;  // Height of the crop
+            this.srcWidth = srcWidth;
+            this.srcHeight = srcHeight;
+        }
+    
+        get hitbox() {
+            return {
+                x: this.position.x,
+                y: this.position.y,
+                width: this.width,
+                height: this.height
+            };
         }
     
         draw() {
             c.drawImage(this.image, this.srcX, this.srcY, this.srcWidth, this.srcHeight, this.position.x, this.position.y, this.width, this.height);
         }
-    }    
-
+    }
+    
     let initialForegroundX = 0;
     let initialForegroundY = 0;
     let additionalForegroundWidth = -1120;
@@ -208,6 +217,23 @@ loadImages(imageSources, function(loadedImages) {
         );
     }
 
+    let dialogueActive = false;
+
+    function showDialogue(text) {
+        const dialogueBox = document.getElementById('dialogue-box');
+        const dialogueText = document.getElementById('dialogue-text');
+        dialogueText.textContent = text;
+        dialogueBox.style.display = 'block';
+        dialogueActive = true;
+    }
+
+    function hideDialogue() {
+        if (dialogueActive) {
+            document.getElementById('dialogue-box').style.display = 'none';
+            dialogueActive = false;
+        }
+    }
+
     function updateMovement() {
         keys.w.pressed = false;
         keys.a.pressed = false;
@@ -275,6 +301,16 @@ loadImages(imageSources, function(loadedImages) {
         if (!collisionDetected) {
             background.position.x = newX;
             background.position.y = newY;
+        }
+
+        if (isColliding(player.hitbox, blackSmith.hitbox)) {
+            showDialogue("Hello! I'm the blacksmith.");
+        } else if (isColliding(player.hitbox, homeOwner.hitbox)) {
+            showDialogue("Welcome to my home!");
+        } else if (isColliding(player.hitbox, gateGuardian.hitbox)) {
+            showDialogue("I guard this gate! Nobody shall pass without proper clearance.");
+        } else {
+            hideDialogue();  // Hide dialogue if no collision with any NPC
         }
 
         foreground.position.x = background.position.x + initialForegroundX;
