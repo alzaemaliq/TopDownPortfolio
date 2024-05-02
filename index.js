@@ -38,7 +38,8 @@ const imageSources = [
     './img/playerLeft.png',
     './img/playerRight.png',
     './img/blackSmith.png',
-    './img/homeOwner.png'
+    './img/homeOwner.png',
+    './img/gateGuardian.png'
 ];
 
 function loadImages(imageSources, callback) {
@@ -67,7 +68,8 @@ loadImages(imageSources, function(loadedImages) {
     const playerImageLeft = loadedImages['./img/playerLeft.png'];
     const playerImageRight = loadedImages['./img/playerRight.png'];
     const blackSmithImage = loadedImages['./img/blackSmith.png'];
-    const homeOwner = loadedImages['./img/homeOwner.png']
+    const homeOwnerImage = loadedImages['./img/homeOwner.png'];
+    const gateGuardianImage = loadedImages['./img/gateGuardian.png'];
 
     let playerY = 330;
 
@@ -119,6 +121,10 @@ loadImages(imageSources, function(loadedImages) {
     let additionalForegroundHeight = -640;
     let blackSmithInitialX = 673; // Your chosen offset from the background's starting x-position
     let blackSmithInitialY = 600; // Your chosen offset from the background's starting y-position
+    let homeOwnerInitialX = 1657;
+    let homeOwnerInitialY = 600;
+    let gateGuardianInitialX = 2783;
+    let gateGuardianInitialY = 600;
 
     const background = new Sprite({
         position: {
@@ -154,6 +160,35 @@ loadImages(imageSources, function(loadedImages) {
         width: 48, // Displayed width
         height: 72 // Displayed height
     });     
+
+    const homeOwner = new Sprite({
+        position: {
+            x: homeOwnerInitialX,  // Centering the sprite horizontally
+            y: homeOwnerInitialY   // Centering the sprite vertically
+        },
+        image: homeOwnerImage,
+        srcX: 0,
+        srcY: 0,
+        srcWidth: 48,
+        srcHeight: 72,
+        width: 48,
+        height: 72
+    });    
+
+    const gateGuardian = new Sprite({
+        position: {
+            x: gateGuardianInitialX,  // Centering the sprite horizontally
+            y: gateGuardianInitialY   // Centering the sprite vertically
+        },
+        image: gateGuardianImage,
+        srcX: 0,
+        srcY: 0,
+        srcWidth: 48,
+        srcHeight: 72,
+        width: 48,
+        height: 72
+    });    
+
 
     const keys = {
         w: { pressed: false },
@@ -210,6 +245,7 @@ loadImages(imageSources, function(loadedImages) {
             player.currentDirection = 'right';
         }
 
+        
         if (keys.w.pressed || keys.s.pressed || keys.a.pressed || keys.d.pressed) {
             player.tickCount++;
             if (player.tickCount > player.ticksPerFrame) {
@@ -221,7 +257,12 @@ loadImages(imageSources, function(loadedImages) {
                 }
             }
         } else {
-            player.frameX = 0;
+            // Set the resting frame based on the direction when not moving
+            if (player.currentDirection === 'right') {
+                player.frameX = player.maxFrame; // last frame for right direction
+            } else {
+                player.frameX = 0; // first frame for all other directions
+            }
         }
 
         let collisionDetected = boundaries.some(boundary => isColliding(player.hitbox, {
@@ -240,10 +281,15 @@ loadImages(imageSources, function(loadedImages) {
         foreground.position.y = background.position.y + initialForegroundY;
         blackSmith.position.x = background.position.x + blackSmithInitialX;
         blackSmith.position.y = background.position.y + blackSmithInitialY;
-
+        homeOwner.position.x = background.position.x + homeOwnerInitialX;
+        homeOwner.position.y = background.position.y + homeOwnerInitialY;
+        gateGuardian.position.x = background.position.x + gateGuardianInitialX;
+        gateGuardian.position.y = background.position.y + gateGuardianInitialY;
 
         background.draw();
         blackSmith.draw();
+        homeOwner.draw();
+        gateGuardian.draw();
         boundaries.forEach(boundary => boundary.draw({x: background.position.x, y: background.position.y}));
 
         const playerImage = player.currentDirection === 'up' ? playerImageUp :
