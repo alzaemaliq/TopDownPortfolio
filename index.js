@@ -4,6 +4,23 @@ const c = canvas.getContext('2d');
 canvas.width = 1024;
 canvas.height = 576;
 
+// Welcome message
+window.onload = function() {
+    document.getElementById('dialogue-box').style.display = 'block';
+};
+document.addEventListener('DOMContentLoaded', function() {
+    // Display the dialogue box upon loading
+    document.getElementById('dialogue-box').style.display = 'block';
+
+    // Listen for the spacebar key press to close the dialogue box
+    document.addEventListener('keydown', function(event) {
+        if (event.code === 'Space') { // Checks if the key pressed is the spacebar
+            document.getElementById('dialogue-box').style.display = 'none';
+            event.preventDefault(); // Prevents any default action associated with the spacebar
+        }
+    });
+});
+
 
 // Define the map of collision areas
 const collisionsMap = [];
